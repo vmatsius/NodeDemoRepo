@@ -56,3 +56,21 @@ npm install express --save
 
 pm2 start <filename>
 
+How to install nginx on windows:
+https://www.javatpoint.com/how-to-install-nginx-on-windows
+
+Module3
+-----------
+TODO: add support ticket about Angular module3 asmt
+
+TODO: onstall node-fetch (npm install ...)
+
+npm i request
+
+npm i ejs 
+
+<%=user%> //to get data sent to ejs file (ex: data is "user")
+use ejs to display data in asmt2
+
+Demo:
+step11 - use in asmt2
