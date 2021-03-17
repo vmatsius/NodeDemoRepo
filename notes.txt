@@ -63,7 +63,7 @@ Module3
 -----------
 TODO: add support ticket about Angular module3 asmt
 
-TODO: onstall node-fetch (npm install ...)
+TODO: install node-fetch (npm install ...)
 
 npm i request
 
