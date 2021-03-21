@@ -9,7 +9,7 @@ var customerSchema = new Schema({
     address:{type:String},
     email:{type:String},
     date:{type:Date, delault:Date.now},
-    orders:{type:Array}
+    order:{type:String}
 },{
     collection:"customers"
 })

@@ -15,6 +15,79 @@ router.use((req,res,next)=>{
     next()
 })
 
+router.get('/getCustomer',(req,res)=>{
+    var c={ name:req.body.name,address:req.body.address,email:req.body.email}
+    customer.find(c, (err,data)=>{
+        if (err){
+            throw err
+        } else {
+            res.json(data)
+        }
+    })
+})
+
+router.get('/getAllCustomers',(req,res)=>{
+    customer.find((err,data)=>{
+        if (err){
+            throw err
+        } else {
+            res.json(data)
+        }
+    })
+})
+
+router.post('/createCustomer',cors(corsOptions),(req,res)=>{
+    //res.send('hi-post')
+    
+    var dateToday=new Date()
+    let c={ 
+        name:req.body.name,
+        address:req.body.address,
+        email:req.body.email,
+        order:req.body.order,
+        date:dateToday
+    }
+    console.log(req.body)
+
+    customer.create(c,(err,data)=>{
+        if (err){
+            throw err
+            }else{
+                //console.log(c),
+                res.send('created')
+        }
+    })
+})
+
+
+router.put('/updateCustomer',(req,res,err)=>{
+    var c={ name:req.body.name,address:req.body.address,email:req.body.email,order:req.body.order}
+
+
+    // customer.find(c, (err,data)=>{
+    //     if (err){
+    //         throw err
+    //     } else {
+    //         //res.json(data)
+    //         if(Object.values(data).length > 0){
+    //             //res.json(Object.values(data)[0])
+    //             o=req.body.order,
+    //             customer.findOneAndUpdate(
+    //                 c,
+    //                 {$push:{orders:o}},
+    //                 (req,res)=>{
+    //                     if (err){
+    //                         throw err
+    //                     } else {
+    //                         console.log('updated customer, added order',o )
+    //                         //res.json({'inserted':true})
+    //                     }
+    //                 })
+    //         }
+    //     }
+    // })
+})
+
 //all routes defined here
 router.get('/customer',(req,res)=>{
     //res.send('hi')
@@ -26,17 +99,6 @@ router.get('/customer',(req,res)=>{
         }
     })
 
-})
-
-router.post('/customer',cors(corsOptions),(req,res)=>{
-    //res.send('hi-post')
-    customer.create(req.body,(err,data)=>{
-        if (err){
-            throw err
-            }else{
-                res.send("data inserted!!!")
-        }
-    })
 })
 
 router.put('/customer',(req,res)=>{
