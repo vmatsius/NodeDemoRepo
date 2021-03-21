@@ -49,6 +49,7 @@ Hello world
 Read article about modules in Node.js:
 https://pencilflip.medium.com/using-es-modules-with-commonjs-modules-in-node-js-1015786dab03#:~:text=You%20can%20only%20use%20import%20and%20export%20in%20an%20ES%20module.&text=You%20cannot%20use%20require%20in,to%20load%20an%20ES%20module.
 
+-----------
 Module2
 -----------
 to be able to create server:
@@ -59,11 +60,12 @@ pm2 start <filename>
 How to install nginx on windows:
 https://www.javatpoint.com/how-to-install-nginx-on-windows
 
+-----------
 Module3
 -----------
 TODO: add support ticket about Angular module3 asmt
 
-TODO: install node-fetch (npm install ...)
+npm install node-fetch
 
 npm i request
 
@@ -74,3 +76,472 @@ use ejs to display data in asmt2
 
 Demo:
 step11 - use in asmt2
+
+-----------
+Module4
+-----------
+
+
+Installation of MongoDB:
+
+
+STEP 1:
+
+    Create a folder called data/db 
+
+STEP 2:
+
+Open link: https://www.mongodb.com/try/download/community
+
+
+STEP 3:
+
+
+On Mac:
+
+1. Download .tgz file 
+2. Install compass — execute 
+3. Go to that folder in terminal and excuse cmd:
+
+   mongod   —dbpath  “path to data/db folder”
+
+
+On Mac using Homebrew:
+
+Setup
+
+1. $ brew tap mongodb/brew
+2. $ brew install mongodb-community
+3. $ brew install mongodb-community-shell
+4. $ brew install mongodb-database-tools   [optinal]
+
+* a configuration file: /usr/local/etc/mongod.conf
+* a log directory path: /usr/local/var/log/mongodb
+* a data directory path: /usr/local/var/mongodb
+
+Starting the mongodb-community Server
+
+Run mongod as a service
+
+               $ brew services stop/start/restart mongodb-community
+
+
+On Windows :
+
+
+1. In the Version dropdown, select the version of MongoDB to download.
+2. In the Platform dropdown, select Windows.
+3. In the Package dropdown, select msi.
+4. Click Download.
+5. Double-click the .msi file.
+6. Choose Setup TypeYou can choose either the Complete (recommended for most users) or Custom setup type. 
+7. Choose complete
+8. Service Configurationcheck  Install MongoD as a Service.
+9. Install MongoDB CompassOptional. To have the wizard install MongoDB Compass, select Install MongoDB Compass (Default).
+10. When ready, click Install.
+      mongod   —dbpath  “path to data/db folder”
+
+      in my case: mongod —dbpath C:\MonDbData\data\db
+
+      MongoDB clients:
+      mongo 
+      compass
+      NodeJS app
+
+Show batabases command:
+show dbs
+
+To create db command:
+use <dbName>
+  (show dbs will not show it since it empty)
+
+To create a collection "employee" (if not exist) and insert empty data:
+  db.employee.insert({})
+    db - keyword
+    insert - method
+
+To show collections inside db:
+show collections
+
+Inserting document(s): //creates if not exist
+> db.employee.insert({name:"Gauri"})
+WriteResult({ "nInserted" : 1 })
+> db.employee.insert({name:"Rudi", designation:"Learner",courses:["React","Angular","Node"]})
+WriteResult({ "nInserted" : 1 })
+> db.employee.insertMany([{name:"Tanvirul"},{name:"Divya"}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("6053730618347964601dbc26"),
+                ObjectId("6053730618347964601dbc27")
+        ]
+}
+
+Retrieve data:
+> db.employee.find()
+{ "_id" : ObjectId("6053718318347964601dbc23") }
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri" }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi", "designation" : "Learner", "courses" : [ "React", "Angular", "Node" ] }
+{ "_id" : ObjectId("6053730618347964601dbc26"), "name" : "Tanvirul" }
+{ "_id" : ObjectId("6053730618347964601dbc27"), "name" : "Divya" }
+
+To make pretty:
+> db.employee.find.pretty()
+{ "_id" : ObjectId("6053718318347964601dbc23") }
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri" }
+{
+        "_id" : ObjectId("6053727818347964601dbc25"),
+        "name" : "Rudi",
+        "designation" : "Learner",
+        "courses" : [
+                "React",
+                "Angular",
+                "Node"
+        ]
+}
+{ "_id" : ObjectId("6053730618347964601dbc26"), "name" : "Tanvirul" }
+{ "_id" : ObjectId("6053730618347964601dbc27"), "name" : "Divya" }
+
+Query data in collection:
+> db.employee.find({name:"Gauri"})
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri" }
+
+Update:
+> db.employee.update({name:"Gauri"},{$set:{designation:"Trainer"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.updateMany({name:"Gauri"},{$set:{designation:"Trainer"}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 0 }
+
+Remove data:
+> db.employee.remove({name:"Divya"})
+WriteResult({ "nRemoved" : 1 })
+
+Delete whole collection:
+drop command
+
+Count:
+> db.employee.find().count()
+5
+
+Find one:
+> db.employee.findOne({name:"Gauri"})
+{
+        "_id" : ObjectId("6053724118347964601dbc24"),
+        "name" : "Gauri",
+        "designation" : "Trainer"
+}
+
+To find employees with existing designation field:
+> db.employee.find({designation:{$exists:true}})
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri", "designation" : "Trainer" }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi", "designation" : "Learner", "courses" : [ "React", "Angular", "Node" ] }
+
+"OR" 
+To find Gauri or Rudi:
+> db.employee.find({name:{$in:["Gauri","Rudi"]}})
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri", "designation" : "Trainer" }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi", "designation" : "Learner", "courses" : [ "React", "Angular", "Node" ] }
+
+"AND" 
+To find "Gauri" and "Trainer"
+> db.employee.find({name:"Gauri",designation:"Trainer"})
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri", "designation" : "Trainer" }
+
+Sort
+> db.employee.find().sort({age:-1})
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri", "designation" : "Trainer", "age" : 200 }
+{ "_id" : ObjectId("60537dc018347964601dbc28"), "name" : "Gloria", "age" : 100 }
+{ "_id" : ObjectId("60537dc018347964601dbc2a"), "name" : "John", "age" : 80 }
+{ "_id" : ObjectId("60537dc018347964601dbc29"), "name" : "Arther", "age" : 70 }
+{ "_id" : ObjectId("6053718318347964601dbc23") }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi", "designation" : "Learner", "courses" : [ "React", "Angular", "Node" ] }
+{ "_id" : ObjectId("6053730618347964601dbc26"), "name" : "Tanvirul" }
+{ "_id" : ObjectId("6053743f2bef8eef0381823a"), "name" : "lilly" }
+>
+> db.employee.find().sort({name:-1})
+{ "_id" : ObjectId("6053743f2bef8eef0381823a"), "name" : "lilly" }
+{ "_id" : ObjectId("6053730618347964601dbc26"), "name" : "Tanvirul" }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi", "designation" : "Learner", "courses" : [ "React", "Angular", "Node" ] }
+{ "_id" : ObjectId("60537dc018347964601dbc2a"), "name" : "John", "age" : 80 }
+{ "_id" : ObjectId("60537dc018347964601dbc28"), "name" : "Gloria", "age" : 100 }
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri", "designation" : "Trainer", "age" : 200 }
+{ "_id" : ObjectId("60537dc018347964601dbc29"), "name" : "Arther", "age" : 70 }
+{ "_id" : ObjectId("6053718318347964601dbc23") }
+
+> db.employee.find().sort({name:-1}).limit(3)
+{ "_id" : ObjectId("6053743f2bef8eef0381823a"), "name" : "lilly" }
+{ "_id" : ObjectId("6053730618347964601dbc26"), "name" : "Tanvirul" }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi", "designation" : "Learner", "courses" : [ "React", "Angular", "Node" ] }
+
+Show only name(by default - aslo shows  id)
+> db.employee.find({},{name:1})
+{ "_id" : ObjectId("6053718318347964601dbc23") }
+{ "_id" : ObjectId("6053724118347964601dbc24"), "name" : "Gauri" }
+{ "_id" : ObjectId("6053727818347964601dbc25"), "name" : "Rudi" }
+{ "_id" : ObjectId("6053730618347964601dbc26"), "name" : "Tanvirul" }
+{ "_id" : ObjectId("6053743f2bef8eef0381823a"), "name" : "lilly" }
+{ "_id" : ObjectId("60537dc018347964601dbc28"), "name" : "Gloria" }
+{ "_id" : ObjectId("60537dc018347964601dbc29"), "name" : "Arther" }
+{ "_id" : ObjectId("60537dc018347964601dbc2a"), "name" : "John" }
+>
+
+No id shown:
+> db.employee.find({},{name:1,_id:0})
+{  }
+{ "name" : "Gauri" }
+{ "name" : "Rudi" }
+{ "name" : "Tanvirul" }
+{ "name" : "lilly" }
+{ "name" : "Gloria" }
+{ "name" : "Arther" }
+{ "name" : "John" }
+>
+Also has designation:
+> db.employee.find({},{name:1,_id:0,designation:1})
+{  }
+{ "name" : "Gauri", "designation" : "Trainer" }
+{ "name" : "Rudi", "designation" : "Learner" }
+{ "name" : "Tanvirul" }
+{ "name" : "lilly" }
+{ "name" : "Gloria" }
+{ "name" : "Arther" }
+{ "name" : "John" }
+
+
+Install SendGrid:
+
+STEP 1
+
+1. Go to https://app.sendgrid.com/
+
+  2. Create account and verify it ( on email will be sent  just verify it )
+
+  3. Create a sender and verify it .
+
+ 4. Go to https://app.sendgrid.com/guide/integrate
+
+5. Click on Choose ===>. Node 
+
+6. Follow along .
+
+-------
+Module5
+-------
+To resubmit asmt maitlo: VPatil@edureka.co
+
+get -> find() on MongoDB
+post-> insert()
+put -> update()
+delete -> delete()
+
+Clients of app backend app (backend:3700/api/user):
+PostMan (explicitly click)
+Angular App (through services)
+
+Create collection in NodeJs:
+MongoClient.connect(mongourl,(err,client)=>{
+    if(err) throw err;
+    let db = client.db("edureka")
+    db.createCollection("customers",(err,res)=>{
+        if (err) throw err;
+        console.log("collection created")
+    })
+
+
+
+
+mongoose - helps chreate schema on server side to prevent insertion of wrong data into schemaless mongoDb database
+1) npm i mongoose
+2) create a model (ex: customer.model.js)
+
+
+cross origin error - when 2 servers (two ports) communicating
+to deal with this - install cors:
+npm i cors
+
+customerRouter(in lecture):
+const express=require('express')
+const router=express.Router()
+const cors=require('cors')
+var customer=require('./customer.model')
+
+
+var corsOptions={
+    origin:'*',
+    optionsSuccessStatus:200
+}
+
+//interceptor 
+router.use((req,res,next)=>{
+    console.log("Time:",Date.now())
+    next()
+
+})
+
+//all routes defined here 
+router.get('/customer',(req,res)=>{
+    customer.find((err,data)=>{
+        if(err)
+          throw err
+        else
+         res.json(data)  
+    })
+
+})
+
+router.post('/customer',(req,res)=>{
+    res.send("hi-post")
+
+})
+
+router.put('/customer',(req,res)=>{
+    res.send("hi-put")
+
+})
+
+router.delete('/customer',(req,res)=>{
+    res.send("hi-delete")
+
+})
+
+
+module.exports=router
+
+
+server2(in lecture):
+
+const express= require('express')
+const mongoose= require('mongoose')
+const cors= require('cors')
+
+
+const customerRoutes=require('./customerRouter')
+
+
+
+
+//creating server and configuring it 
+var app=express()
+app.use(cors())
+app.use(express.urlencoded({ extended :true }))
+app.use(express.json())
+
+//mongoose connection 
+
+mongoose.connect('mongodb://127.0.0.1:27017/edureka',{useUnifiedTopology:true,useNewUrlParser:true})
+const connection=mongoose.connection;
+
+connection.once('open',()=>{
+    console.log("MongoDB connected!!!!")
+})
+
+
+app.use('/api',customerRoutes)
+
+
+app.listen(3400,()=>{
+
+    console.log("server started at 3400")
+})
+
+
+Angular Forms:
+1)
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { from } from 'rxjs';
+import { pwdValidator } from './PwdValidator';
+
+@Component({
+  selector: 'app-forms',
+  templateUrl: './forms.component.html',
+  styleUrls: ['./forms.component.css']
+})
+export class FormsComponent implements OnInit {
+
+  formModel:FormGroup;
+
+  constructor(private fb :FormBuilder,private http:HttpClient) {
+    this.formModel=this.fb.group({
+      name:['',Validators.required],
+      email:[''],
+      address:'',
+      // City:'',
+      // PhoneNo:'',
+      // PassGroup:this.fb.group({
+      //   Password:'',
+      //   CPassword:['']
+      // },{
+      //   validator:this.passValidator
+      // })
+
+    })
+  }
+
+  ngOnInit(): void {
+  }
+
+  onSubmit(){
+    console.log("I am called!!!")
+    let data=this.formModel.value;
+    // console.log(this.formModel.value)
+    this.http.post('http://localhost:3400/api/customer', data).subscribe(data => {
+        console.log(data);
+    })
+
+  }
+
+
+  passValidator(frm:FormGroup){
+
+      let pwd=frm.controls['Password'].value
+      let cpass=frm.controls['CPassword'].value
+      console.log(pwd)
+      console.log(cpass)
+      //console.log(frm.controls['Password'].value === frm.controls['CPassword'].value ? null : {mismatch:true} )     )
+      return  frm.controls['Password'].value === frm.controls['CPassword'].value ? null : {mismatch:true}
+
+  }
+}
+2)
+<form [formGroup]="formModel"
+     >
+
+  <label>Full Name:</label>
+  <input type="text" formControlName="name"><br>
+    <!-- <div *ngIf="formModel.controls['Fullname'].touched && formModel.controls['Fullname'].invalid && formModel.controls['Fullname'].errors?.required ">
+      <p style="color:red">Name is mandatory</p>
+    </div> -->
+
+  <label>Email:</label>
+
+   <input type="text" formControlName="email">
+
+  <br>
+
+
+  <label>Address:</label>
+  <input type="text" formControlName="address"><br>
+
+  <!-- <label>City:</label>
+  <input type="text" formControlName="City"><br>
+
+  <label>Phone No:</label>
+  <input type="text" formControlName="PhoneNo"><br>
+
+
+  <div formGroupName="PassGroup">
+      <label>Password:</label>
+      <input type="password" formControlName="Password"><br>
+
+      <label>Confirmed Password:</label>
+      <input type="password" formControlName="CPassword"><br>
+
+      <div *ngIf="formModel.controls['PassGroup'].errors?.mismatch">
+        Pass mismatch
+      </div>
+</div> -->
+
+<button type="submit" (click)="onSubmit()">Submit</button>
+</form>

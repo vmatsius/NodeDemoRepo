@@ -1,0 +1,69 @@
+1)
+> db.movies.insert({rate:3.9,name:"Aquaman",genre:"Action"})
+WriteResult({ "nInserted" : 1 })
+> db.movies.insert({rate:4.5,name:"Black Panther",genre:"Action"})
+WriteResult({ "nInserted" : 1 })
+> db.movies.insert({rate:8.7,name:"Coco",genre:"Adventure"})
+WriteResult({ "nInserted" : 1 })
+> db.movies.insert({rate:9.5,name:"Soul",genre:"Adventure"})
+WriteResult({ "nInserted" : 1 })
+> db.movies.insert({rate:7.3,name:"Pink Panther",genre:"Comedy"})
+WriteResult({ "nInserted" : 1 })
+2)
+> db.movies.find().pretty()
+{
+        "_id" : ObjectId("60540e1818347964601dbc2b"),
+        "rate" : 3.9,
+        "name" : "Aquaman",
+        "genre" : "Action"
+}
+{
+        "_id" : ObjectId("60540f4918347964601dbc2c"),
+        "rate" : 4.5,
+        "name" : "Black Panther",
+        "genre" : "Action"
+}
+{
+        "_id" : ObjectId("60540f542bef8eef0381823b"),
+        "name" : "Coco",
+        "genre" : "Adventure",
+        "rate" : 8.7
+}
+{
+        "_id" : ObjectId("60540fe62bef8eef0381823d"),
+        "name" : "Soul",
+        "rate" : 9.5,
+        "genre" : "Adventure"
+}
+{
+        "_id" : ObjectId("6054105c18347964601dbc2d"),
+        "rate" : 7.3,
+        "name" : "Pink Panther",
+        "genre" : "Comedy"
+}
+3)
+> db.movies.findOne({genre:"Comedy"})
+{
+        "_id" : ObjectId("6054105c18347964601dbc2d"),
+        "rate" : 7.3,
+        "name" : "Pink Panther",
+        "genre" : "Comedy"
+}
+4)
+> db.movies.find().sort({rate:-1}).limit(3)
+{ "_id" : ObjectId("60540fe62bef8eef0381823d"), "name" : "Soul", "rate" : 9.5, "genre" : "Adventure" }
+{ "_id" : ObjectId("60540f542bef8eef0381823b"), "name" : "Coco", "genre" : "Adventure", "rate" : 8.7 }
+{ "_id" : ObjectId("6054105c18347964601dbc2d"), "rate" : 7.3, "name" : "Pink Panther", "genre" : "Comedy" }
+5)
+> db.movies.update({name:"Coco"},{$set:{achievements:"Super hit"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.movies.update({name:"Soul"},{$set:{achievements:"Super Duper hit"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+6)
+> db.movies.find({achievements:{$in:["Super hit","Super Duper hit"]}})
+{ "_id" : ObjectId("60540f542bef8eef0381823b"), "name" : "Coco", "genre" : "Adventure", "rate" : 8.7, "achievements" : "Super hit" }
+{ "_id" : ObjectId("60540fe62bef8eef0381823d"), "name" : "Soul", "rate" : 9.5, "genre" : "Adventure", "achievements" : "Super Duper hit" }
+7)
+> db.movies.find({achievements:{$exists:true}})
+{ "_id" : ObjectId("60540f542bef8eef0381823b"), "name" : "Coco", "genre" : "Adventure", "rate" : 8.7, "achievements" : "Super hit" }
+{ "_id" : ObjectId("60540fe62bef8eef0381823d"), "name" : "Soul", "rate" : 9.5, "genre" : "Adventure", "achievements" : "Super Duper hit" }

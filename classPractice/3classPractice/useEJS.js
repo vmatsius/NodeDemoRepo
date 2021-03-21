@@ -10,8 +10,7 @@ app.get('/',function(req,res){
     res.render('index',{
         user:"abc",
         title:'xyz'
-    }
-    )
+    })
 })
 
 app.listen(9090)

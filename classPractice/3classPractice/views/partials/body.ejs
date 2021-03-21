@@ -1,5 +1,9 @@
-<h1>Hi there</h1>
-<br><br>
-<%=user%>
-<br>
-<%=title%>
+<h2>Body:</h2>
+
+<html>
+    <ul>
+        <% employeeList.forEach(function(employee) {   %>
+            <li> <%=employee.name%> - <%=employee.id%> - <%=employee.createdAt%> </li>
+        <% });  %>
+    </ul>
+</html>
