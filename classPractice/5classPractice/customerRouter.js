@@ -15,6 +15,7 @@ router.use((req,res,next)=>{
     next()
 })
 
+
 router.get('/getCustomer',(req,res)=>{
     var c={ name:req.body.name,address:req.body.address,email:req.body.email}
     customer.find(c, (err,data)=>{
@@ -54,7 +55,7 @@ router.post('/createCustomer',cors(corsOptions),(req,res)=>{
             throw err
             }else{
                 //console.log(c),
-                res.send('created')
+                res.send(c)
         }
     })
 })

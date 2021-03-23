@@ -1,0 +1,15 @@
+
+
+<ul *ngFor="let o of oList">
+    <li>
+        Name: {{o.name}}, Email: {{o.email}}, Address: {{o.address}}, Order: {{o.order}}
+
+        <!-- <button (click)="sendEmail(o)">
+            Send Email
+        </button> -->
+    </li>
+</ul>
+
+<div *ngIf="selectedId>0">
+    the selected id: {{selectedId}}
+</div>

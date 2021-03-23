@@ -1,0 +1,20 @@
+<form [formGroup]="formModel" (ngSubmit)="onSubmit">
+    <label>Name</label>
+    <input type="text" formControlName="name"><br>
+
+    <label>Address</label>
+    <input type="text" formControlName="address"><br>
+
+    <label>Email</label>
+    <input type="text" formControlName="email"><br>
+
+    <label>Order</label>
+    <input type="text" formControlName="order"><br>
+
+    <button type="submit" (click)="onSubmit()">Submit</button>
+</form>
+
+<pre [hidden]="isHidden">
+    Inserted customer order:
+    {{this.formModel.value | json}}
+</pre>

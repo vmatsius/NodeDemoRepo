@@ -545,3 +545,326 @@ export class FormsComponent implements OnInit {
 
 <button type="submit" (click)="onSubmit()">Submit</button>
 </form>
+
+-------------------------
+Module6
+------------------------
+Yo use GraphQL dependencies:
+ "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.0",
+    "lodash": "^4.17.21"   
+
+server.js
+------------
+
+const express=require('express')
+const expressGraphQL = require('express-graphql').graphqlHTTP
+const schema =require('./schema')
+
+
+const port=4800
+const app=express()
+
+//add the middleware
+app.use('/graphql',expressGraphQL({
+    schema,
+    graphiql:true
+}))
+
+app.listen(port,()=>{
+    console.log("server started at ",port)
+})
+
+
+schema.js (put right link in there, ex: localhost:8900...)
+----------------
+
+const { default: axios } = require('axios');
+const graphql= require('graphql')
+const _= require('lodash')
+
+
+const {
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLInt, 
+    GraphQLList,
+    GraphQLNonNull,
+    GraphQLSchema,
+}=graphql;
+
+const UserType= new GraphQLObjectType({
+    name:'User',
+    fields:{
+       
+            id:{ type:GraphQLString } ,
+            firstName:{type:GraphQLString},
+            age:{type:GraphQLInt},
+            companyId:{type:GraphQLString }
+       
+        
+    }   
+})
+
+const CompanyType= new GraphQLObjectType({
+    name:'Company',
+    fields:{
+       
+            id:{ type:GraphQLString } ,
+            name:{type:GraphQLString},
+            location:{type:GraphQLString}
+       
+        
+    }   
+})
+
+//define a query:
+const RootQuery=new GraphQLObjectType({
+    name:'RootQueryType',
+    fields:{
+        user:{
+            type:UserType,
+            args:{id:{type:GraphQLString}},
+            resolve(parentValue,args){
+                return axios.get(`http://localhost:8900/users/${args.id}`)
+                .then(resp=>resp.data)
+            }
+        },
+        company:{
+            type:CompanyType,
+            args:{id:{type:GraphQLString}},
+            resolve(parentValue,args){
+                return axios.get(`http://localhost:8900/companies/${args.id}`)
+                .then(resp=>resp.data)
+              }
+
+        }
+    }
+})
+
+
+
+
+//Mutation
+const RootMutation= new GraphQLObjectType({
+    name:"Mutation",
+    fields:{
+        addUser:{
+            type:UserType,
+            args:{
+                firstName:{type:GraphQLString},
+                age:{type:GraphQLInt},
+                companyId:{type:GraphQLString}
+            },
+            resolve(parentValue,args){
+                return axios.post('http://localhost:8900/users',args)
+                .then(resp=>resp.data)
+
+            }
+        }
+    }
+})
+
+
+module.exports=new GraphQLSchema({
+    query:RootQuery,
+    mutation:RootMutation
+})
+
+
+
+Set up json-server to test APIs:
+---------------------------------------
+users.json:
+
+
+{
+  "users": [
+    {
+      "id": "23",
+      "firstName": "Bill",
+      "age": 20,
+      "companyId": "1"
+    },
+    {
+      "id": "47",
+      "firstName": "John",
+      "age": 22,
+      "companyId": "2"
+    },
+    {
+      "id": "48",
+      "firstName": "Andy",
+      "age": 11,
+      "companyId": "2"
+    },
+    {
+      "id": "49",
+      "firstName": "Kerio",
+      "age": 33,
+      "companyId": "3"
+    },
+    {
+      "firstName": "Stephen",
+      "age": 36,
+      "id": "o-a_VA0"
+    },
+    {
+      "firstName": "Divya",
+      "age": 100,
+      "companyId": "1",
+      "id": "2B4ycRi"
+    }
+  ],
+  "companies": [
+    {
+      "id": "1",
+      "name": "Apple",
+      "location": "Seattle"
+    },
+    {
+      "id": "2",
+      "name": "Microsoft",
+      "age": 22,
+      "location": "Newyork"
+    },
+    {
+      "id": "3",
+      "name": "Google",
+      "age": 11,
+      "location": "California"
+    }
+  ]
+}
+
+
+
+npm init -y -> will not ask questions
+
+
+
+
+Babel (transpiling)
+-------
+1) npm i @babel/core @babel/preset-env @babel/register babel-polyfill
+2) create file .babelrc and put this code in: 
+{
+    "presets":[
+        "@babel/preset-env"
+    ]
+}
+3) create start.js file with code:
+require('@babel/requster')({})
+module.exports=require('./app')   //app is name of jsFile
+4) update package.json, where add to "scripts"
+    "start":"node start.js",
+    "dev":"nodemon start.js",
+
+Then start app by: node start.js
+
+
+ejs header(for asmt)
+------------------
+
+<!-- views/partials/head.ejs --> 
+   <meta charset="UTF-8" /> 
+      <title>Form</title>
+      <!-- <link   
+         rel="stylesheet"   
+         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+         crossorigin="anonymous" 
+      /> -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+
+
+ejs footer(for asmt)
+-------------
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#usersGrid').DataTable();
+    } );
+</script>
+
+
+
+--------------------
+Module7
+--------------------
+
+
+<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+    <div class="container">
+      <div class="card login-card">
+        <div class="row no-gutters">
+          
+          <div class="col-md-7">
+            <div class="card-body">
+              
+              <p class="login-card-description">Sign into your account</p>
+              <form action="/auth/login" method="POST">
+                  <div class="form-group">
+                    <label for="email" class="sr-only">Email</label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email address">
+                  </div>
+                  <div class="form-group mb-4">
+                    <label for="password" class="sr-only">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="***********">
+                  </div>
+                  <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login">
+                </form>
+   
+                <p class="login-card-footer-text">Don't have an account? <a href="/register" class="text-reset">Register here</a></p>
+                <nav class="login-card-footer-nav">
+                  <a href="#!">Terms of use.</a>
+                  <a href="#!">Privacy policy</a>
+                </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </main>
+
+
+
+Gauree (to All - Entire Audience):
+
+7:12 AM: <h2>Register a new User</h2>
+  <form name="form1" action="/auth/register" method="POST">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password">
+    </div>
+   
+    <button type="submit" class="btn btn-primary">Register</button>
+    <a href="/" class="btn btn-success" role="button">cancel</a>
+  </form>
+
+
+
+
+
+npm i bcryptjs jsonwebtoken
+
+npm i node-localstorage

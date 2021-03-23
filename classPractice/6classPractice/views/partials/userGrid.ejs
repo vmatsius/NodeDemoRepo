@@ -1,0 +1,69 @@
+<h2>Bug Tracker</h2>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Assignee</th>
+        <th scope="col">Status</th>
+        <th scope="col"># Of Days Left</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% userData = JSON.parse(data)%>
+
+        <%for(var i=0; i<userData.length; i++){ %>
+            <tr>
+                <% today=new Date().getTime()%>
+                <% bugCreationDate=new Date(userData[i].createdAt).getTime() %>
+                <% no_of_days=parseInt((today-bugCreationDate)/(1000*60*60*24)) %>
+                <td><%=title = userData[i].title %></td>
+                <td><%=userData[i].description %></td>
+                <td><%=userData[i].assignee %></td>
+                <td><%=userData[i].status %></td>
+                <td><%= 3-no_of_days %></td>
+                <td>
+                    <a class="edit" title="Resolve" data-toggle="tooltip" href="/api/resolveBug/<%=userData[i].title%>"><button type="button" class="btn btn-success">Resolve</button></a>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+  </table>
+
+  <a href="/addUser">
+    <button type="button" class="btn btn-info add-new"><i class="fa fa-plus">Add New</button> 
+</a>
+
+
+<!-- <table class="table-boarded" id="userGrid">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Assignee</th>
+            <th>Status</th>
+            <th># Of Days Left</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% userData = JSON.parse(data)%>
+
+        <%for(var i=0; i<userData.length; i++){ %>
+            <tr>
+                <% today=new Date().getTime()%>
+                <% bugCreationDate=new Date(userData[i].createdAt).getTime() %>
+                <% no_of_days=parseInt((today-bugCreationDate)/(1000*60*60*24)) %>
+                <td><%=title = userData[i].title %></td>
+                <td><%=userData[i].description %></td>
+                <td><%=userData[i].assignee %></td>
+                <td><%=userData[i].status %></td>
+                <td><%= 3-no_of_days %></td>
+                <td>
+                    <a class="edit" title="Resolve" data-toggle="tooltip" href="/api/resolveBug/<%=userData[i].title%>"><button type="button" class="btn btn-success">Resolve</button></a>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table> -->

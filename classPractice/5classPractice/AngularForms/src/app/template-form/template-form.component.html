@@ -1,0 +1,28 @@
+<p>template-form works!</p>
+
+<form #f="ngForm">
+    <label>Full Name</label>
+    <input type="text" ngModel name="first"><br>
+
+    <label>Emaile</label>
+    <input type="text" ngModel name="email"><br>
+
+    <label>Phone Number</label>
+    <input type="text" ngModel name="phoneNo"><br>
+
+    <div ngModelGroup="passwords">
+
+        <label>Password</label>
+        <input type="password" ngModel name="pwd"><br>
+
+        <label>Confirm Password</label>
+        <input type="password" ngModel name="cpwd"><br>
+
+    </div>
+
+    <button (click)="onSubmit()">Submit</button>
+</form>
+
+<pre [hidden]="isHidden">
+    {{f.value | json}}
+</pre>
